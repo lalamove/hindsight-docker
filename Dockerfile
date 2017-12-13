@@ -51,7 +51,8 @@ RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX='' -DCMAKE_PREFIX_PA
         -DEXT_systemd=on \
         -DEXT_zlib=on \
         ..
-RUN CMAKE_PREFIX_PATH=/app CPATH=/app/include DESTDIR=/app make install
+RUN CMAKE_PREFIX_PATH=/app CPATH=/app/include make
+RUN DESTDIR=/app make install
 
 # Build hindsight to /app without prefix and link it to lua_sandbox
 WORKDIR /app/src
