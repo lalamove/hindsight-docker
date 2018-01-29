@@ -1,6 +1,6 @@
 FROM gcr.io/google-containers/debian-base-amd64:0.3 as builder
-ARG HINDSIGHT_VERSION
-ARG SANDBOX_VERSION
+ENV HINDSIGHT_VERSION v0.14.8
+ENV SANDBOX_VERSION v1.2.9
 
 # Install build requirements
 RUN apt-get update && apt-get dist-upgrade -y
@@ -26,13 +26,13 @@ WORKDIR /hindsight/src
 RUN git clone --depth 1 --branch apache-arrow-0.7.1 -- https://github.com/apache/arrow.git
 RUN mkdir -p arrow/cpp/release
 WORKDIR arrow/cpp/release
-RUN cmake -DCMAKE_BUILD_TYPE=Release -DARROW_BUILD_TESTS=Off .. -DCMAKE_INSTALL_PREFIX='/hindsight' 
+RUN cmake -DCMAKE_BUILD_TYPE=Release -DARROW_BUILD_TESTS=Off .. -DCMAKE_INSTALL_PREFIX='/hindsight'
 RUN make install
 WORKDIR /hindsight/src
 RUN git clone --depth 1 --branch apache-parquet-cpp-1.3.1 -- https://github.com/apache/parquet-cpp.git
 RUN mkdir -p parquet-cpp/release
 WORKDIR parquet-cpp/release
-RUN cmake -DCMAKE_BUILD_TYPE=Release -DPARQUET_MINIMAL_DEPENDENCY=ON -DPARQUET_BUILD_TESTS=Off -DPARQUET_BUILD_BENCHMARKS=Off -DPARQUET_BUILD_EXECUTABLES=Off .. -DCMAKE_PREFIX_PATH=/hindsight -DCMAKE_INSTALL_PREFIX='/hindsight' 
+RUN cmake -DCMAKE_BUILD_TYPE=Release -DPARQUET_MINIMAL_DEPENDENCY=ON -DPARQUET_BUILD_TESTS=Off -DPARQUET_BUILD_BENCHMARKS=Off -DPARQUET_BUILD_EXECUTABLES=Off .. -DCMAKE_PREFIX_PATH=/hindsight -DCMAKE_INSTALL_PREFIX='/hindsight'
 RUN make install
 ## BUG FIX
 RUN sed -i 's/PRIMITIVE_FACTORY(\(.\+\));/PRIMITIVE_FACTORY(\1)/' /hindsight/include/parquet/schema.h
@@ -43,7 +43,7 @@ WORKDIR /hindsight/src
 RUN git clone --depth 1 --branch master https://github.com/mozilla-services/lua_sandbox_extensions.git
 RUN mkdir lua_sandbox_extensions/release
 WORKDIR lua_sandbox_extensions/release
-RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_SHARED_LINKER_FLAGS="-L/hindsight/lib" -DCMAKE_INSTALL_PREFIX='' -DCMAKE_PREFIX_PATH=/hindsight \ 
+RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_SHARED_LINKER_FLAGS="-L/hindsight/lib" -DCMAKE_INSTALL_PREFIX='' -DCMAKE_PREFIX_PATH=/hindsight \
         -DEXT_aws=off \
         -DEXT_bloom_filter=on \
         -DEXT_circular_buffer=on \
@@ -118,21 +118,21 @@ RUN rm -r src include hindsight
 FROM gcr.io/google-containers/debian-base-amd64:0.3
 
 RUN apt-get update && apt-get dist-upgrade -y && \
-	apt-get install -y \
-		lua-rex-pcre \
-		libssl1.0 \
-		ca-certificates \
-		librdkafka1 \
-		zlib1g \
-		libgeoip1 \
-		libsnappy1v5 \
-		geoip-database \
-		geoip-database-extra \
+    apt-get install -y \
+        lua-rex-pcre \
+        libssl1.0 \
+        ca-certificates \
+        librdkafka1 \
+        zlib1g \
+        libgeoip1 \
+        libsnappy1v5 \
+        geoip-database \
+        geoip-database-extra \
         libboost-regex1.62.0 \
         libboost-system1.62.0 \
         libboost-filesystem1.62.0 \
-	&& \
-	rm -r /var/lib/apt/*
+    && \
+    rm -r /var/lib/apt/*
 COPY --from=builder /hindsight/ /hindsight
 ADD cfg/hindsight.cfg /hindsight/cfg
 
