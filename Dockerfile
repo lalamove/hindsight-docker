@@ -135,6 +135,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
     rm -r /var/lib/apt/*
 COPY --from=builder /hindsight/ /hindsight
 ADD cfg/hindsight.cfg /hindsight/cfg
+ADD entrypoint.sh /entrypoint.sh
 
 RUN useradd -U -d /hindsight hindsight && chown -R hindsight: /hindsight
 USER hindsight
@@ -143,5 +144,5 @@ VOLUME /hindsight/output /hindsight/load /hindsight/run /hindsight/input
 WORKDIR /hindsight
 ENV LD_LIBRARY_PATH /hindsight/lib
 ENV IANA_TZDATA /hindsight/share/iana/tzdata
-ENTRYPOINT [ "/hindsight/bin/hindsight"]
+ENTRYPOINT [ "/entrypoint.sh"]
 CMD ["cfg/hindsight.cfg"]
