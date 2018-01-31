@@ -138,7 +138,6 @@ ADD cfg/hindsight.cfg /hindsight/cfg
 ADD entrypoint.sh /entrypoint.sh
 
 RUN useradd -U -d /hindsight hindsight && chown -R hindsight: /hindsight
-USER hindsight
 
 VOLUME /hindsight/output /hindsight/load /hindsight/run /hindsight/input
 WORKDIR /hindsight
