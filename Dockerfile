@@ -110,9 +110,11 @@ RUN CMAKE_PREFIX_PATH=/hindsight CPATH=/hindsight/include DESTDIR=/hindsight mak
 
 # Stage /hindsight folder so it can be copied
 WORKDIR /hindsight
-RUN mkdir -p bin cfg input output/input run/input run/analysis run/output lib
-RUN cp -r run load
+RUN mkdir -p bin cfg var 
 RUN rm -r src include hindsight
+WORKDIR /hindsight/var
+RUN mkdir -p output load/input load/analysis load/output
+RUN cp -r load run
 
 # Build actual hindsight container!
 FROM gcr.io/google-containers/debian-base-amd64:0.3
@@ -137,10 +139,10 @@ COPY --from=builder /hindsight/ /hindsight
 ADD cfg/hindsight.cfg /hindsight/cfg
 ADD entrypoint.sh /entrypoint.sh
 
-RUN useradd -U -d /hindsight hindsight && chown -R hindsight: /hindsight
+RUN useradd -U -d /hindsight/var hindsight && chown -R hindsight: /hindsight/var
 
-VOLUME /hindsight/output /hindsight/load /hindsight/run /hindsight/input
-WORKDIR /hindsight
+VOLUME /hindsight/var
+WORKDIR /hindsight/var
 ENV LD_LIBRARY_PATH /hindsight/lib
 ENV IANA_TZDATA /hindsight/share/iana/tzdata
 ENTRYPOINT [ "/entrypoint.sh"]
