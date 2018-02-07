@@ -110,7 +110,7 @@ RUN CMAKE_PREFIX_PATH=/hindsight CPATH=/hindsight/include DESTDIR=/hindsight mak
 
 # Stage /hindsight folder so it can be copied
 WORKDIR /hindsight
-RUN mkdir -p bin cfg var 
+RUN mkdir -p bin cfg var
 RUN rm -r src include hindsight
 WORKDIR /hindsight/var
 RUN mkdir -p output load/input load/analysis load/output
@@ -138,6 +138,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
 COPY --from=builder /hindsight/ /hindsight
 ADD cfg/hindsight.cfg /hindsight/cfg
 ADD entrypoint.sh /entrypoint.sh
+ADD input/prune_input.cfg /hindsight/var/input
 
 RUN useradd -U -d /hindsight/var hindsight && chown -R hindsight: /hindsight/var
 
