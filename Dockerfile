@@ -147,4 +147,4 @@ WORKDIR /hindsight/var
 ENV LD_LIBRARY_PATH /hindsight/lib
 ENV IANA_TZDATA /hindsight/share/iana/tzdata
 ENTRYPOINT [ "/entrypoint.sh"]
-CMD ["/hindsight/bin/hindsight", "cfg/hindsight.cfg"]
+CMD ["/hindsight/bin/hindsight", "/hindsight/cfg/hindsight.cfg"]
