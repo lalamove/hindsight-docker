@@ -1,5 +1,5 @@
 FROM gcr.io/google-containers/debian-base-amd64:0.3 as builder
-ENV HINDSIGHT_VERSION v0.14.9
+ENV HINDSIGHT_VERSION v0.14.10
 ENV SANDBOX_VERSION v1.2.9
 
 # Install build requirements
