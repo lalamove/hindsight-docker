@@ -44,38 +44,16 @@ RUN git clone --depth 1 --branch master https://github.com/mozilla-services/lua_
 RUN mkdir lua_sandbox_extensions/release
 WORKDIR lua_sandbox_extensions/release
 RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_SHARED_LINKER_FLAGS="-L/hindsight/lib" -DCMAKE_INSTALL_PREFIX='' -DCMAKE_PREFIX_PATH=/hindsight \
+        -DENABLE_ALL_EXT=true \
         -DEXT_aws=off \
-        -DEXT_bloom_filter=on \
-        -DEXT_circular_buffer=on \
-        -DEXT_cjson=on \
-        -DEXT_compat=on \
-        -DEXT_cuckoo_filter=on \
-        -DEXT_elasticsearch=on \
-        -DEXT_geoip=on \
-        -DEXT_heka=on \
-        -DEXT_hyperloglog=on \
-        -DEXT_jose=on \
-        -DEXT_kafka=on \
-        -DEXT_lfs=on \
-        -DEXT_lpeg=on \
-        -DEXT_lsb=on \
+        -DEXT_gcp=off \
+        -DEXT_maxminddb=off \
         -DEXT_moz_ingest=off \
         -DEXT_moz_logging=off \
         -DEXT_moz_pioneer=off \
         -DEXT_moz_security=off \
         -DEXT_moz_telemetry=off \
-        -DEXT_openssl=on \
-        -DEXT_parquet=on \
         -DEXT_postgres=off \
-        -DEXT_rjson=on \
-        -DEXT_sax=on \
-        -DEXT_snappy=on \
-        -DEXT_socket=on \
-        -DEXT_ssl=on \
-        -DEXT_struct=on \
-        -DEXT_syslog=on \
-        -DEXT_systemd=on \
-        -DEXT_zlib=on \
         ..
 RUN luasandbox_DIR=/hindsight/share/luasandbox/cmake CPATH=/hindsight/include make
 RUN DESTDIR=/hindsight make install
