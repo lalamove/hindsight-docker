@@ -138,7 +138,7 @@ RUN apt-get update && apt-get dist-upgrade -y && \
 COPY --from=builder /hindsight/ /hindsight
 ADD cfg/hindsight.cfg /hindsight/cfg
 ADD entrypoint.sh /entrypoint.sh
-ADD input/prune_input.cfg /hindsight/var/input
+ADD input/prune_input.cfg /hindsight/var/run/input
 
 RUN useradd -U -d /hindsight/var hindsight && chown -R hindsight: /hindsight/var
 
