@@ -4,7 +4,7 @@ ENV SANDBOX_VERSION v1.2.10
 
 # Install build requirements
 RUN apt-get update && apt-get dist-upgrade -y
-RUN apt-get install -y liblua5.3-dev cmake build-essential git librdkafka-dev libssl1.0-dev zlib1g-dev libsystemd-dev curl libcurl4-openssl-dev ca-certificates libgeoip-dev libsnappy-dev automake wget libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-dev libboost-program-options-dev libboost-test-dev libtool bison flex pkg-config libjansson-dev
+RUN apt-get install -y liblua5.3-dev cmake build-essential git librdkafka-dev libssl1.0-dev zlib1g-dev libsystemd-dev curl libcurl4-openssl-dev ca-certificates libmaxminddb-dev libsnappy-dev automake wget libboost-regex-dev libboost-filesystem-dev libboost-system-dev libboost-dev libboost-program-options-dev libboost-test-dev libtool bison flex pkg-config libjansson-dev
 
 # Build lua_sandbox and install to /hindsight without prefix
 WORKDIR /hindsight/src
@@ -47,7 +47,6 @@ RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_SHARED_LINKER_FLAGS="-L/hindsight/l
         -DENABLE_ALL_EXT=true \
         -DEXT_aws=off \
         -DEXT_gcp=off \
-        -DEXT_maxminddb=off \
         -DEXT_moz_ingest=off \
         -DEXT_moz_logging=off \
         -DEXT_moz_pioneer=off \
@@ -97,17 +96,16 @@ RUN cp -r load run
 # Build actual hindsight container!
 FROM gcr.io/google-containers/debian-base-amd64:0.3
 
-RUN apt-get update && apt-get dist-upgrade -y && \
+RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list && apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y \
         lua-rex-pcre \
         libssl1.0 \
         ca-certificates \
         librdkafka1 \
         zlib1g \
-        libgeoip1 \
+        libmaxminddb0 \
         libsnappy1v5 \
-        geoip-database \
-        geoip-database-extra \
+        geoip-database-contrib \
         libboost-regex1.62.0 \
         libboost-system1.62.0 \
         libboost-filesystem1.62.0 \
