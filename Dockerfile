@@ -105,7 +105,7 @@ RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list && apt-get update && ap
         zlib1g \
         libmaxminddb0 \
         libsnappy1v5 \
-        geoip-database-contrib \
+        geoipupdate \
         libboost-regex1.62.0 \
         libboost-system1.62.0 \
         libboost-filesystem1.62.0 \
@@ -115,6 +115,9 @@ COPY --from=builder /hindsight/ /hindsight
 ADD cfg/hindsight.cfg /hindsight/cfg
 ADD entrypoint.sh /entrypoint.sh
 ADD input/prune_input.cfg /hindsight/var/run/input
+ADD GeoIP.conf /etc/GeoIP.conf
+
+RUN geoipupdate -v
 
 RUN useradd -U -d /hindsight/var hindsight && chown -R hindsight: /hindsight/var
 
