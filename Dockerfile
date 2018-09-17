@@ -1,6 +1,6 @@
-FROM gcr.io/google-containers/debian-base-amd64:0.3 as builder
-ENV HINDSIGHT_VERSION v0.14.12
-ENV SANDBOX_VERSION v1.2.10
+FROM gcr.io/google-containers/debian-base-amd64:0.3.2 as builder
+ENV HINDSIGHT_VERSION v0.15.0
+ENV SANDBOX_VERSION v1.3.0
 
 # Install build requirements
 RUN apt-get update && apt-get dist-upgrade -y
@@ -94,7 +94,7 @@ RUN mkdir -p output load/input load/analysis load/output
 RUN cp -r load run
 
 # Build actual hindsight container!
-FROM gcr.io/google-containers/debian-base-amd64:0.3
+FROM gcr.io/google-containers/debian-base-amd64:0.3.2
 
 RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list && apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y \
