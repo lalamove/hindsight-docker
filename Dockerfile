@@ -1,6 +1,6 @@
 FROM gcr.io/google-containers/debian-base-amd64:0.3.2 as builder
-ENV HINDSIGHT_VERSION v0.15.0
-ENV SANDBOX_VERSION v1.3.0
+ENV HINDSIGHT_VERSION 81cef011138f36e8a3e6ff77ec409786840a3055
+ENV SANDBOX_VERSION 513940503aafc937d19868bb5e889bb0020cd26b
 
 # Install build requirements
 RUN apt-get update && apt-get dist-upgrade -y
@@ -8,7 +8,8 @@ RUN apt-get install -y liblua5.3-dev cmake build-essential git librdkafka-dev li
 
 # Build lua_sandbox and install to /hindsight without prefix
 WORKDIR /hindsight/src
-RUN git clone --depth 1 --branch $SANDBOX_VERSION -- https://github.com/mozilla-services/lua_sandbox.git
+RUN git clone https://github.com/mozilla-services/lua_sandbox.git
+RUN git --git-dir lua_sandbox/.git reset --hard $SANDBOX_VERSION 
 RUN mkdir lua_sandbox/release
 WORKDIR lua_sandbox/release
 RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX='' ..
@@ -79,7 +80,8 @@ RUN DESTDIR=/hindsight make install
 
 # Build hindsight to /hindsight without prefix and link it to lua_sandbox
 WORKDIR /hindsight/src
-RUN git clone --depth 1 --branch $HINDSIGHT_VERSION https://github.com/mozilla-services/hindsight.git
+RUN git clone https://github.com/mozilla-services/hindsight.git
+RUN git --git-dir hindsight/.git reset --hard $HINDSIGHT_VERSION 
 RUN mkdir hindsight/release
 WORKDIR hindsight/release
 RUN cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_PREFIX_PATH=/hindsight -DCMAKE_INSTALL_PREFIX='' ..
