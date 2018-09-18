@@ -98,8 +98,8 @@ RUN cp -r load run
 # Build actual hindsight container!
 FROM gcr.io/google-containers/debian-base-amd64:0.3.2
 
-RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list && apt-get update && apt-get dist-upgrade -y && \
-    apt-get install -y \
+RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list && apt-get update && \
+    apt-get --no-install-recommends install -y \
         lua-rex-pcre \
         libssl1.0 \
         ca-certificates \
