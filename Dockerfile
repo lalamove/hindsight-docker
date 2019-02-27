@@ -1,4 +1,4 @@
-FROM gcr.io/google-containers/debian-base-amd64:0.3.2 as builder
+FROM gcr.io/google-containers/debian-base-amd64:0.4.1 as builder
 ENV HINDSIGHT_VERSION 81cef011138f36e8a3e6ff77ec409786840a3055
 ENV SANDBOX_VERSION 513940503aafc937d19868bb5e889bb0020cd26b
 
@@ -96,7 +96,7 @@ RUN mkdir -p output load/input load/analysis load/output
 RUN cp -r load run
 
 # Build actual hindsight container!
-FROM gcr.io/google-containers/debian-base-amd64:0.3.2
+FROM gcr.io/google-containers/debian-base-amd64:0.4.1
 
 RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list && apt-get update && \
     apt-get --no-install-recommends install -y \
@@ -111,6 +111,7 @@ RUN sed -i 's/main/main contrib/g' /etc/apt/sources.list && apt-get update && \
         libboost-regex1.62.0 \
         libboost-system1.62.0 \
         libboost-filesystem1.62.0 \
+        bash \
     && \
     rm -r /var/lib/apt/*
 COPY --from=builder /hindsight/ /hindsight
